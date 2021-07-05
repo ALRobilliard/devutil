@@ -39,7 +39,7 @@ namespace DevUtil
                 var password = PasswordGenerator.Generate(length, !noNumbers, !noSymbols);
                 Console.WriteLine($"Password: {password}");
                 await TextCopy.ClipboardService.SetTextAsync(password);
-                Console.WriteLine("Password copied to clipboard");
+                WriteLineColoured.Write("Password copied to clipboard", ConsoleColor.Yellow);
             });
             rootCommand.AddCommand(generatePassword);
 
@@ -60,7 +60,7 @@ namespace DevUtil
 
                 Console.WriteLine($"GUID: {guid}");
                 await TextCopy.ClipboardService.SetTextAsync(guid);
-                Console.WriteLine("GUID copied to clipboard");
+                WriteLineColoured.Write("GUID copied to clipboard", ConsoleColor.Yellow);
             });
             rootCommand.AddCommand(generateGuid);
 
