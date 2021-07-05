@@ -1,7 +1,6 @@
 ﻿using System;
 using System.CommandLine;
 using System.CommandLine.Invocation;
-using System.IO;
 using DevUtil.Utils;
 
 namespace DevUtil
@@ -35,10 +34,12 @@ namespace DevUtil
                     "Omit symbols"
                 )
             );
-            generatePassword.Handler = CommandHandler.Create<int, bool, bool>((length, noNumbers, noSymbols) =>
+            generatePassword.Handler = CommandHandler.Create<int, bool, bool>(async (length, noNumbers, noSymbols) =>
             {
                 var password = PasswordGenerator.Generate(length, !noNumbers, !noSymbols);
                 Console.WriteLine($"Password: {password}");
+                await TextCopy.ClipboardService.SetTextAsync(password);
+                Console.WriteLine("Password copied to clipboard");
             });
             rootCommand.AddCommand(generatePassword);
 
@@ -51,13 +52,15 @@ namespace DevUtil
                     "Return as lowercase"
                 )
             );
-            generateGuid.Handler = CommandHandler.Create<bool>((lowercase) =>
+            generateGuid.Handler = CommandHandler.Create<bool>(async (lowercase) =>
             {
-                var guid = Guid.NewGuid();
+                var guid = Guid.NewGuid().ToString();
                 if (lowercase == false)
-                    Console.WriteLine($"GUID: {guid.ToString().ToUpper()}");
-                else
-                    Console.WriteLine($"GUID: {guid}");
+                    guid = guid.ToUpper();
+
+                Console.WriteLine($"GUID: {guid}");
+                await TextCopy.ClipboardService.SetTextAsync(guid);
+                Console.WriteLine("GUID copied to clipboard");
             });
             rootCommand.AddCommand(generateGuid);
 
